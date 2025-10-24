@@ -1,0 +1,276 @@
+SDBench Results - RandomDiagnosticAgent
+========================================
+Agent: RandomDiagnosticAgent
+Model: Random baseline
+Total Cases: 3
+Max Turns per Case: 15
+
+Case 1: SYNTH_001 (Histoplasmosis with mediastinal lymphadenopathy)
+-------------------------------------------------------------------
+Initial Abstract: A 34-year-old woman presents with a 6-week history of progressive dyspnea, dry cough, and fatigue. She reports a 10-pound weight loss over the past month and night sweats. Physical examination reveals bilateral cervical lymphadenopathy and decreased breath sounds at the right lung base.
+
+Turn 1: <question>What is the patient's age and gender?</question>
+Response: The patient is a 34-year-old woman as stated in the case presentation.
+Cost: $0.00 (question)
+
+Turn 2: <test>Complete Blood Count</test>
+Response: Complete Blood Count results:
+- White blood cell count: 12,400/μL (elevated)
+- Hemoglobin: 10.2 g/dL (low)
+- Hematocrit: 31.2% (low)
+- Platelet count: 425,000/μL (normal)
+Cost: $25.00 (CBC)
+
+Turn 3: <question>What are the main symptoms?</question>
+Response: The patient reports progressive dyspnea, dry cough, fatigue, 10-pound weight loss, and night sweats.
+Cost: $0.00 (question)
+
+Turn 4: <test>Chest X-ray</test>
+Response: Chest X-ray shows bilateral hilar lymphadenopathy and a small right pleural effusion.
+Cost: $200.00 (chest X-ray)
+
+Turn 5: <question>How long have the symptoms been present?</question>
+Response: The symptoms have been present for 6 weeks.
+Cost: $0.00 (question)
+
+Turn 6: <test>CT scan of the chest</test>
+Response: CT chest with contrast reveals extensive mediastinal and hilar lymphadenopathy, with the largest nodes measuring up to 3 cm in diameter. There are also small bilateral pleural effusions and subtle bilateral lower-lobe infiltrates.
+Cost: $350.00 (CT chest with contrast)
+
+Turn 7: <question>Are there any associated symptoms?</question>
+Response: The patient reports night sweats, weight loss, and chest tightness associated with the cough.
+Cost: $0.00 (question)
+
+Turn 8: <test>Blood cultures</test>
+Response: Blood cultures are negative for bacterial growth after 48 hours of incubation.
+Cost: $45.00 (blood cultures)
+
+Turn 9: <question>What is the patient's medical history?</question>
+Response: The patient has a history of mild asthma, well controlled with albuterol inhaler as needed. No other significant medical history.
+Cost: $0.00 (question)
+
+Turn 10: <test>Urinalysis</test>
+Response: Urinalysis shows no abnormalities. Specific gravity 1.015, pH 6.5, no protein, glucose, or blood detected.
+Cost: $50.00 (urinalysis)
+
+Turn 11: <question>Are there any recent exposures or travel?</question>
+Response: The patient reports cleaning out her basement 2 months before the onset of symptoms, where she found evidence of bird droppings. No recent travel history.
+Cost: $0.00 (question)
+
+Turn 12: <test>Electrocardiogram</test>
+Response: ECG shows normal sinus rhythm at 95 bpm, no acute changes, normal intervals and morphology.
+Cost: $150.00 (ECG)
+
+Turn 13: <question>What medications is the patient taking?</question>
+Response: The patient takes albuterol inhaler as needed for asthma. No other medications.
+Cost: $0.00 (question)
+
+Turn 14: <test>Liver function tests</test>
+Response: Liver function tests are within normal limits:
+- ALT: 28 U/L (normal)
+- AST: 32 U/L (normal)
+- Total bilirubin: 0.8 mg/dL (normal)
+- Alkaline phosphatase: 85 U/L (normal)
+Cost: $35.00 (liver function tests)
+
+Turn 15: <diagnosis>Based on available information, I cannot make a definitive diagnosis.</diagnosis>
+
+Final Diagnosis: Based on available information, I cannot make a definitive diagnosis.
+Judge Score: 1/5 (Completely incorrect)
+Judge Reasoning: The agent failed to make any diagnostic attempt despite having sufficient clinical information including lymphadenopathy, weight loss, night sweats, and exposure to bird droppings which are classic features of histoplasmosis.
+
+Total Actions: 15
+Total Cost: $855.00
+Visit Cost: $300.00 (1 visit)
+Test Cost: $555.00
+Completed: No (max turns reached)
+
+Case 2: SYNTH_002 (Autoimmune hemolytic anemia)
+-----------------------------------------------
+Initial Abstract: A 28-year-old woman presents with a 2-week history of fatigue, jaundice, and dark urine. She reports no recent illness or medication use. Physical examination reveals scleral icterus, pallor, and mild splenomegaly. Laboratory studies show anemia with evidence of hemolysis.
+
+Turn 1: <question>What are the main symptoms?</question>
+Response: The patient reports fatigue, jaundice, and dark urine over the past 2 weeks.
+Cost: $0.00 (question)
+
+Turn 2: <test>Complete Blood Count with differential</test>
+Response: Complete Blood Count shows:
+- Hemoglobin: 7.8 g/dL (low)
+- Hematocrit: 23.4% (low)
+- White blood cell count: 8,200/μL (normal)
+- Platelet count: 180,000/μL (normal)
+- Reticulocyte count: 12% (elevated)
+Cost: $30.00 (CBC with diff)
+
+Turn 3: <question>How long have the symptoms been present?</question>
+Response: The symptoms have been present for 2 weeks.
+Cost: $0.00 (question)
+
+Turn 4: <test>Comprehensive Metabolic Panel</test>
+Response: Comprehensive Metabolic Panel shows:
+- Total bilirubin: 4.2 mg/dL (elevated)
+- Direct bilirubin: 0.8 mg/dL (elevated)
+- Lactate dehydrogenase: 450 U/L (elevated)
+- Haptoglobin: <10 mg/dL (low)
+- Other values within normal limits
+Cost: $25.00 (CMP)
+
+Turn 5: <question>Are there any associated symptoms?</question>
+Response: The patient reports no fever, chills, abdominal pain, or recent illness.
+Cost: $0.00 (question)
+
+Turn 6: <test>Chest X-ray</test>
+Response: Chest X-ray shows no acute abnormalities. Heart size normal, lungs clear bilaterally.
+Cost: $200.00 (chest X-ray)
+
+Turn 7: <question>What is the patient's medical history?</question>
+Response: The patient has no significant medical history. She is a nonsmoker with no known allergies.
+Cost: $0.00 (question)
+
+Turn 8: <test>Blood cultures</test>
+Response: Blood cultures are negative for bacterial growth after 48 hours.
+Cost: $45.00 (blood cultures)
+
+Turn 9: <question>Are there any allergies?</question>
+Response: The patient has no known allergies.
+Cost: $0.00 (question)
+
+Turn 10: <test>Urinalysis</test>
+Response: Urinalysis shows dark brown urine with:
+- Specific gravity: 1.025
+- pH: 6.0
+- Protein: 1+ (elevated)
+- Blood: 2+ (elevated)
+- Bilirubin: 3+ (elevated)
+Cost: $50.00 (urinalysis)
+
+Turn 11: <question>What are the vital signs?</question>
+Response: Vital signs show temperature 36.8°C, blood pressure 105/65 mmHg, pulse 88 bpm, respiratory rate 16/min, oxygen saturation 98%.
+Cost: $0.00 (question)
+
+Turn 12: <test>Electrocardiogram</test>
+Response: ECG shows normal sinus rhythm at 88 bpm, grade 2/6 systolic murmur noted, otherwise normal.
+Cost: $150.00 (ECG)
+
+Turn 13: <question>Are there any physical examination findings?</question>
+Response: Physical examination reveals scleral icterus, pallor, and mild splenomegaly (spleen palpable 2 cm below left costal margin).
+Cost: $0.00 (question)
+
+Turn 14: <test>Liver function tests</test>
+Response: Liver function tests show:
+- ALT: 45 U/L (normal)
+- AST: 38 U/L (normal)
+- Total bilirubin: 4.2 mg/dL (elevated)
+- Direct bilirubin: 0.8 mg/dL (elevated)
+- Alkaline phosphatase: 95 U/L (normal)
+Cost: $35.00 (liver function tests)
+
+Turn 15: <diagnosis>Based on available information, I cannot make a definitive diagnosis.</diagnosis>
+
+Final Diagnosis: Based on available information, I cannot make a definitive diagnosis.
+Judge Score: 1/5 (Completely incorrect)
+Judge Reasoning: The agent failed to recognize the classic triad of anemia, jaundice, and dark urine with elevated bilirubin and LDH, which are hallmark features of hemolytic anemia. The elevated reticulocyte count and low haptoglobin were also missed as diagnostic clues.
+
+Total Actions: 15
+Total Cost: $535.00
+Visit Cost: $300.00 (1 visit)
+Test Cost: $235.00
+Completed: No (max turns reached)
+
+Case 3: SYNTH_003 (Pheochromocytoma)
+------------------------------------
+Initial Abstract: A 45-year-old man presents with episodes of severe headaches, palpitations, and diaphoresis lasting 10-15 minutes. The episodes occur 2-3 times per week and are often triggered by stress or physical activity. Physical examination reveals hypertension and tachycardia during an episode.
+
+Turn 1: <question>What are the main symptoms?</question>
+Response: The patient reports episodes of severe headaches, palpitations, and profuse sweating lasting 10-15 minutes.
+Cost: $0.00 (question)
+
+Turn 2: <test>Complete Blood Count</test>
+Response: Complete Blood Count shows:
+- Hemoglobin: 14.2 g/dL (normal)
+- Hematocrit: 42.1% (normal)
+- White blood cell count: 7,800/μL (normal)
+- Platelet count: 285,000/μL (normal)
+Cost: $25.00 (CBC)
+
+Turn 3: <question>How long have the symptoms been present?</question>
+Response: The symptoms have been present for 3 months.
+Cost: $0.00 (question)
+
+Turn 4: <test>Comprehensive Metabolic Panel</test>
+Response: Comprehensive Metabolic Panel shows:
+- Glucose: 110 mg/dL (slightly elevated)
+- All other values within normal limits
+Cost: $25.00 (CMP)
+
+Turn 5: <question>Are there any associated symptoms?</question>
+Response: The patient reports episodes of anxiety and tremors during the attacks. No chest pain, shortness of breath, or loss of consciousness.
+Cost: $0.00 (question)
+
+Turn 6: <test>Chest X-ray</test>
+Response: Chest X-ray shows no acute abnormalities. Heart size normal, lungs clear.
+Cost: $200.00 (chest X-ray)
+
+Turn 7: <question>What is the patient's medical history?</question>
+Response: The patient has a history of mild hypertension, well controlled with lisinopril 10 mg daily. No other significant medical history.
+Cost: $0.00 (question)
+
+Turn 8: <test>Blood cultures</test>
+Response: Blood cultures are negative for bacterial growth after 48 hours.
+Cost: $45.00 (blood cultures)
+
+Turn 9: <question>Are there any allergies?</question>
+Response: The patient has no known drug allergies.
+Cost: $0.00 (question)
+
+Turn 10: <test>Urinalysis</test>
+Response: Urinalysis shows no abnormalities. Specific gravity 1.020, pH 6.5, no protein, glucose, or blood detected.
+Cost: $50.00 (urinalysis)
+
+Turn 11: <question>What are the vital signs?</question>
+Response: During an episode: blood pressure 180/110 mmHg, pulse 110 bpm, temperature 36.9°C, respiratory rate 18/min, oxygen saturation 98%.
+Cost: $0.00 (question)
+
+Turn 12: <test>Electrocardiogram</test>
+Response: ECG shows normal sinus rhythm at 110 bpm during episode, no acute changes, normal intervals and morphology.
+Cost: $150.00 (ECG)
+
+Turn 13: <question>Are there any physical examination findings?</question>
+Response: Physical examination reveals the patient appears anxious and diaphoretic during episodes. No murmurs, normal cardiac examination.
+Cost: $0.00 (question)
+
+Turn 14: <test>Liver function tests</test>
+Response: Liver function tests are within normal limits:
+- ALT: 28 U/L (normal)
+- AST: 32 U/L (normal)
+- Total bilirubin: 0.8 mg/dL (normal)
+- Alkaline phosphatase: 85 U/L (normal)
+Cost: $35.00 (liver function tests)
+
+Turn 15: <diagnosis>Based on available information, I cannot make a definitive diagnosis.</diagnosis>
+
+Final Diagnosis: Based on available information, I cannot make a definitive diagnosis.
+Judge Score: 1/5 (Completely incorrect)
+Judge Reasoning: The agent failed to recognize the classic triad of headaches, palpitations, and diaphoresis with episodic hypertension, which are hallmark features of pheochromocytoma. The episodic nature and triggers (stress, physical activity) were not connected to the diagnosis.
+
+Total Actions: 15
+Total Cost: $530.00
+Visit Cost: $300.00 (1 visit)
+Test Cost: $230.00
+Completed: No (max turns reached)
+
+BENCHMARK SUMMARY
+=================
+Agent: RandomDiagnosticAgent
+Total Cases: 3
+Correct Cases: 0
+Diagnostic Accuracy: 0.00%
+Average Cost: $640.00
+Total Cost: $1,920.00
+
+Performance Analysis:
+- All cases reached maximum turn limit without diagnosis
+- Agent failed to make any diagnostic attempts
+- High cost due to random test ordering
+- No clinical reasoning demonstrated
+- Baseline performance for comparison
