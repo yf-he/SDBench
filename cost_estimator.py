@@ -2,16 +2,16 @@
 
 import json
 from typing import Dict, List, Optional
-from openai import OpenAI
 from data_models import CPTMapping, AgentAction, ActionType
 from config import Config
+from utils.llm_client import chat_completion_with_retries
 
 class CostEstimator:
     """Cost Estimator module for calculating diagnostic process costs."""
     
     def __init__(self, config: Config):
         self.config = config
-        self.client = OpenAI(api_key=config.OPENAI_API_KEY)
+        self.client = config.get_openai_client()
         self.model = config.GATEKEEPER_MODEL  # Using same model as gatekeeper
         self.physician_visit_cost = config.PHYSICIAN_VISIT_COST
         
@@ -163,10 +163,9 @@ class CostEstimator:
         }
     
     def calculate_visit_cost(self, actions: List[AgentAction]) -> float:
-        """Calculate the cost of physician visits based on question actions."""
+        """Estimate the cost of physician visits using LLM per visit."""
         visit_count = 0
         in_visit = False
-        
         for action in actions:
             if action.action_type == ActionType.ASK_QUESTIONS:
                 if not in_visit:
@@ -174,13 +173,16 @@ class CostEstimator:
                     in_visit = True
             elif action.action_type == ActionType.REQUEST_TESTS:
                 in_visit = False
-        
-        return visit_count * self.physician_visit_cost
+        if visit_count == 0:
+            return 0.0
+        # Ask LLM for a reasonable per-visit estimate and multiply
+        per_visit = self._estimate_visit_cost_llm()
+        return per_visit * visit_count
     
     def calculate_test_cost(self, test_request: str) -> float:
-        """Calculate the cost of a specific test request."""
-        cpt_mapping = self._map_test_to_cpt(test_request)
-        return cpt_mapping.estimated_cost
+        """Estimate the cost of a specific test request via LLM (direct estimation)."""
+        estimation = self._fallback_cost_estimation(test_request)
+        return estimation.estimated_cost
     
     def _map_test_to_cpt(self, test_request: str) -> CPTMapping:
         """Map a test request to CPT codes and estimate cost."""
@@ -203,11 +205,14 @@ class CostEstimator:
         """
         
         try:
-            response = self.client.chat.completions.create(
+            response = chat_completion_with_retries(
+                client=self.client,
                 model=self.model,
                 messages=[{"role": "user", "content": prompt}],
+                max_retries=4,
+                retry_interval_sec=8,
                 max_tokens=200,
-                temperature=0.1
+                temperature=0.1,
             )
             
             result = json.loads(response.choices[0].message.content.strip())
@@ -233,32 +238,35 @@ class CostEstimator:
             )
             
         except Exception as e:
-            print(f"Error mapping test to CPT: {e}")
+            print("Error mapping test to CPT:")
+            print(f"  ErrorType: {type(e).__name__}")
+            print(f"  ErrorRepr: {e!r}")
             # Fallback estimation
             return self._fallback_cost_estimation(test_request)
     
     def _fallback_cost_estimation(self, test_request: str) -> CPTMapping:
         """Fallback cost estimation when CPT mapping fails."""
         prompt = f"""
-        You are a medical cost estimator. Given a test request, estimate a reasonable cost in USD.
+        You are a medical cost estimator. Given a test request, estimate a reasonable cash price in USD for a US health system (2023 era). Return ONLY a number, no text.
         
         Test Request: {test_request}
         
-        Consider typical costs for similar procedures:
-        - Basic lab tests: $20-50
-        - Imaging studies: $100-500
-        - Procedures: $200-1000
-        - Complex procedures: $1000+
-        
-        Provide only a single number representing the estimated cost in USD.
+        Consider typical ranges:
+        - Basic lab: 20-60
+        - Imaging (plain X-ray/US/CT/MRI): 80-1200 depending on modality and contrast
+        - Procedures/biopsy/endoscopy: 200-3000
+        Respond with a single number only.
         """
         
         try:
-            response = self.client.chat.completions.create(
+            response = chat_completion_with_retries(
+                client=self.client,
                 model=self.model,
                 messages=[{"role": "user", "content": prompt}],
+                max_retries=3,
+                retry_interval_sec=8,
                 max_tokens=50,
-                temperature=0.3
+                temperature=0.3,
             )
             
             cost_text = response.choices[0].message.content.strip()
@@ -278,13 +286,42 @@ class CostEstimator:
             )
             
         except Exception as e:
-            print(f"Error in fallback cost estimation: {e}")
+            print("Error in fallback cost estimation:")
+            print(f"  ErrorType: {type(e).__name__}")
+            print(f"  ErrorRepr: {e!r}")
             return CPTMapping(
                 test_name=test_request,
                 cpt_codes=[],
                 estimated_cost=100.0,
                 confidence=0.1
             )
+
+    def _estimate_visit_cost_llm(self) -> float:
+        """Ask LLM for a reasonable per-visit physician cost (single-number USD)."""
+        prompt = """
+        You are a medical cost estimator. Estimate the out-of-pocket cash price in USD for a single outpatient physician visit in the United States (2023 era). Respond with a single number only.
+        """
+        try:
+            response = chat_completion_with_retries(
+                client=self.client,
+                model=self.model,
+                messages=[{"role": "user", "content": prompt}],
+                max_retries=3,
+                retry_interval_sec=8,
+                max_tokens=20,
+                temperature=0.1,
+            )
+            text = response.choices[0].message.content.strip()
+            import re
+            m = re.search(r"\$?(\d+(?:\.\d{1,2})?)", text)
+            if m:
+                return float(m.group(1))
+        except Exception as e:
+            print("Error estimating visit cost via LLM:")
+            print(f"  ErrorType: {type(e).__name__}")
+            print(f"  ErrorRepr: {e!r}")
+        # Fallback to configured default
+        return self.physician_visit_cost
     
     def calculate_total_cost(self, actions: List[AgentAction]) -> float:
         """Calculate total cost for a diagnostic encounter."""

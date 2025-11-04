@@ -2,16 +2,16 @@
 
 import re
 from typing import List, Optional, Tuple
-from openai import OpenAI
 from data_models import CaseFile, AgentAction, GatekeeperResponse, ActionType
 from config import Config
+from utils.llm_client import chat_completion_with_retries
 
 class GatekeeperAgent:
     """The Gatekeeper Agent serves as the information oracle for patient cases."""
     
     def __init__(self, config: Config):
         self.config = config
-        self.client = OpenAI(api_key=config.OPENAI_API_KEY)
+        self.client = config.get_openai_client()
         self.model = config.GATEKEEPER_MODEL
     
     def process_action(self, action: AgentAction, case_file: CaseFile) -> GatekeeperResponse:
@@ -75,11 +75,14 @@ class GatekeeperAgent:
         """
         
         try:
-            response = self.client.chat.completions.create(
+            response = chat_completion_with_retries(
+                client=self.client,
                 model=self.model,
                 messages=[{"role": "user", "content": prompt}],
+                max_retries=5,
+                retry_interval_sec=8,
                 max_tokens=500,
-                temperature=0.1
+                temperature=0.1,
             )
             
             answer = response.choices[0].message.content.strip()
@@ -87,7 +90,9 @@ class GatekeeperAgent:
                 return None
             return answer
         except Exception as e:
-            print(f"Error extracting explicit answer: {e}")
+            print("Error extracting explicit answer:")
+            print(f"  ErrorType: {type(e).__name__}")
+            print(f"  ErrorRepr: {e!r}")
             return None
     
     def _extract_explicit_test_result(self, test_request: str, case_text: str) -> Optional[str]:
@@ -106,11 +111,14 @@ class GatekeeperAgent:
         """
         
         try:
-            response = self.client.chat.completions.create(
+            response = chat_completion_with_retries(
+                client=self.client,
                 model=self.model,
                 messages=[{"role": "user", "content": prompt}],
+                max_retries=5,
+                retry_interval_sec=8,
                 max_tokens=500,
-                temperature=0.1
+                temperature=0.1,
             )
             
             result = response.choices[0].message.content.strip()
@@ -118,7 +126,9 @@ class GatekeeperAgent:
                 return None
             return result
         except Exception as e:
-            print(f"Error extracting explicit test result: {e}")
+            print("Error extracting explicit test result:")
+            print(f"  ErrorType: {type(e).__name__}")
+            print(f"  ErrorRepr: {e!r}")
             return None
     
     def _generate_synthetic_answer(self, question: str, case_file: CaseFile) -> str:
@@ -141,16 +151,21 @@ class GatekeeperAgent:
         """
         
         try:
-            response = self.client.chat.completions.create(
+            response = chat_completion_with_retries(
+                client=self.client,
                 model=self.model,
                 messages=[{"role": "user", "content": prompt}],
+                max_retries=5,
+                retry_interval_sec=8,
                 max_tokens=300,
-                temperature=0.7
+                temperature=0.7,
             )
             
             return response.choices[0].message.content.strip()
         except Exception as e:
-            print(f"Error generating synthetic answer: {e}")
+            print("Error generating synthetic answer:")
+            print(f"  ErrorType: {type(e).__name__}")
+            print(f"  ErrorRepr: {e!r}")
             return "Unable to provide information at this time."
     
     def _generate_synthetic_test_result(self, test_request: str, case_file: CaseFile) -> str:
@@ -173,16 +188,21 @@ class GatekeeperAgent:
         """
         
         try:
-            response = self.client.chat.completions.create(
+            response = chat_completion_with_retries(
+                client=self.client,
                 model=self.model,
                 messages=[{"role": "user", "content": prompt}],
+                max_retries=5,
+                retry_interval_sec=8,
                 max_tokens=400,
-                temperature=0.7
+                temperature=0.7,
             )
             
             return response.choices[0].message.content.strip()
         except Exception as e:
-            print(f"Error generating synthetic test result: {e}")
+            print("Error generating synthetic test result:")
+            print(f"  ErrorType: {type(e).__name__}")
+            print(f"  ErrorRepr: {e!r}")
             return "Test result not available at this time."
     
     def validate_request(self, action: AgentAction) -> Tuple[bool, str]:

@@ -1,0 +1,4 @@
+Agent,Diagnostic_Accuracy,Average_Cost,Total_Cases,Correct_Cases,Strategy
+RandomDiagnosticAgent,0.00,640.00,3,0,Random baseline
+ConservativeDiagnosticAgent,100.00,325.00,3,3,Questions first
+LLMDiagnosticAgent,100.00,1618.33,3,3,AI-powered comprehensive

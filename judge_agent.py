@@ -1,16 +1,16 @@
 """Judge Agent implementation for SDBench."""
 
 from typing import List
-from openai import OpenAI
 from data_models import CaseFile, JudgeScore
 from config import Config
+from utils.llm_client import chat_completion_with_retries
 
 class JudgeAgent:
     """The Judge Agent evaluates final diagnoses using a 5-point Likert scale."""
     
     def __init__(self, config: Config):
         self.config = config
-        self.client = OpenAI(api_key=config.OPENAI_API_KEY)
+        self.client = config.get_openai_client()
         self.model = config.JUDGE_MODEL
     
     def evaluate_diagnosis(self, candidate_diagnosis: str, case_file: CaseFile) -> JudgeScore:
@@ -18,18 +18,23 @@ class JudgeAgent:
         prompt = self._create_evaluation_prompt(candidate_diagnosis, case_file)
         
         try:
-            response = self.client.chat.completions.create(
+            response = chat_completion_with_retries(
+                client=self.client,
                 model=self.model,
                 messages=[{"role": "user", "content": prompt}],
+                max_retries=5,
+                retry_interval_sec=8,
                 max_tokens=500,
-                temperature=0.1
+                temperature=0.1,
             )
             
             result = self._parse_evaluation_response(response.choices[0].message.content.strip())
             return result
             
         except Exception as e:
-            print(f"Error evaluating diagnosis: {e}")
+            print("Error evaluating diagnosis:")
+            print(f"  ErrorType: {type(e).__name__}")
+            print(f"  ErrorRepr: {e!r}")
             return JudgeScore(
                 score=1,
                 reasoning="Error in evaluation process",

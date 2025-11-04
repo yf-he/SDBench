@@ -1,8 +1,6 @@
 # SDBench - Sequential Diagnosis Benchmark
 
-SDBench is a comprehensive benchmark system for evaluating diagnostic reasoning capabilities of AI agents and humans in a realistic, iterative, and cost-aware manner. 
-
-This implementation reproduces the framework described in the paper "Sequential Diagnosis with Language Models" by Harsha Nori*, Mayank Daswani*, Christopher Kelly*, Scott Lundberg*, Marco Tulio Ribeiro*, Marc Wilson*, Xiaoxuan Liu, Viknesh Sounderajah, Jonathan M Carlson, Matthew P Lungren, Bay Gross, Peter Hames, Mustafa Suleyman, Dominic King, Eric Horvitz (Microsoft AI, July 3, 2025) and provides a multi-agent system that simulates clinical encounters.
+SDBench is a comprehensive benchmark system for evaluating diagnostic reasoning capabilities of AI agents and humans in a realistic, iterative, and cost-aware manner. This implementation reproduces the framework described in the paper "Sequential Diagnosis with Language Models" by Harsha Nori*, Mayank Daswani*, Christopher Kelly*, Scott Lundberg*, Marco Tulio Ribeiro*, Marc Wilson*, Xiaoxuan Liu, Viknesh Sounderajah, Jonathan M Carlson, Matthew P Lungren, Bay Gross, Peter Hames, Mustafa Suleyman, Dominic King, Eric Horvitz (Microsoft AI, July 3, 2025) and provides a multi-agent system that simulates clinical encounters.
 
 ## Overview
 
