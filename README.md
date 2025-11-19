@@ -17,7 +17,7 @@ SDBench consists of three core components that interact with a diagnostic agent:
 - **Synthetic Data Generation**: Generates plausible clinical findings when information isn't explicitly available
 - **Comprehensive Evaluation**: Uses a 5-point rubric for diagnostic accuracy assessment
 - **Multiple Agent Types**: Includes example agents for testing and comparison
-- **Interactive Demo**: Allows manual interaction for testing and demonstration
+- **Interactive UI Demos**: Multiple Streamlit interfaces including the Multi-turn Medical Diagnosis Copilot for human-AI collaborative diagnosis
 
 ## Installation
 
@@ -26,6 +26,10 @@ SDBench consists of three core components that interact with a diagnostic agent:
    ```bash
    pip install -r requirements.txt
    ```
+   For the interactive UI demos, also install Streamlit:
+   ```bash
+   pip install streamlit
+   ```
 3. Set up your OpenAI API key:
    ```bash
    export OPENAI_API_KEY="your_api_key_here"
@@ -33,6 +37,12 @@ SDBench consists of three core components that interact with a diagnostic agent:
    Or create a `.env` file with:
    ```
    OPENAI_API_KEY=your_api_key_here
+   ```
+   
+   For OpenRouter support (alternative to OpenAI), set:
+   ```bash
+   export OPENROUTER_API_KEY="your_api_key_here"
+   export SDBENCH_API_PROVIDER="openrouter"
    ```
 
 ## Quick Start
@@ -55,6 +65,57 @@ python main.py full
 ### Run Interactive Demo
 ```bash
 python main.py interactive
+```
+
+## Interactive UI Demos
+
+SDBench includes several Streamlit-based interactive interfaces for exploring the diagnostic system:
+
+### Multi-turn Medical Diagnosis Copilot (`clinical_rounds_ui.py`)
+
+A comprehensive interactive demo that simulates a real-world clinical diagnostic encounter with human-AI collaboration.
+
+**Features:**
+- **Role-playing scenario**: You play the role of an attending physician making diagnostic decisions
+- **AI Resident Doctor**: An AI assistant that can draft questions, test orders, or diagnoses on demand
+- **Medical Evidence System**: Provides patient information, answers clinical questions, and returns test results
+- **Flexible workflow**: Choose to draft each step yourself or let the AI resident doctor suggest the next action
+- **Real-time evaluation**: Receive expert evaluation of your final diagnosis against ground truth
+
+**Usage:**
+```bash
+streamlit run clinical_rounds_ui.py
+```
+
+**How it works:**
+1. Select a patient case from the dataset
+2. Review the initial presentation (chief complaint and findings)
+3. For each turn, choose to:
+   - Ask questions about patient history, symptoms, or examination findings
+   - Order diagnostic tests or imaging studies
+   - Submit a final diagnosis
+4. Decide whether to draft the action yourself or let the AI resident doctor suggest a draft
+5. Receive responses from the Medical Evidence System
+6. Finalize your diagnosis to receive expert evaluation
+
+This creates a collaborative human-AI workflow that mirrors real clinical decision-making processes.
+
+### Human Agent UI (`human_agent_ui.py`)
+
+A simpler interface for manual diagnostic interaction without AI assistance.
+
+**Usage:**
+```bash
+streamlit run human_agent_ui.py
+```
+
+### LLM Agent UI (`llm_agent_ui.py`)
+
+An interface for running and visualizing fully automated LLM diagnostic agents.
+
+**Usage:**
+```bash
+streamlit run llm_agent_ui.py
 ```
 
 ## System Architecture
@@ -193,6 +254,9 @@ SDBench/
 ├── synthetic_cases.py    # Synthetic test cases
 ├── example_agents.py     # Example diagnostic agents
 ├── main.py               # Main script and demos
+├── clinical_rounds_ui.py # Multi-turn Medical Diagnosis Copilot UI
+├── human_agent_ui.py     # Human agent interactive UI
+├── llm_agent_ui.py       # LLM agent visualization UI
 ├── requirements.txt      # Python dependencies
 └── README.md            # This file
 ```
